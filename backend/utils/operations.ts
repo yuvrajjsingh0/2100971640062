@@ -5,7 +5,7 @@ interface QueryString {
     [key: string]: any;
 }
 
-class ApiFeatures {
+class Operations {
     query: any[];
     queryStr: QueryString;
 
@@ -80,4 +80,4 @@ class ApiFeatures {
     }
 }
 
-export default ApiFeatures;
+export default Operations;

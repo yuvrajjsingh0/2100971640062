@@ -1,10 +1,9 @@
-import ApiFeatures from "../../utils/apiFeatures";
-import asyncHandler from "../../utils/catchAsyncAwait";
+import Operations from "../../utils/operations";
 
 const fs = require('fs');
 const path = require('path');
 
-let database: any = [];
+let database: Array<any> = [];
 
 fs.readFile(path.join(__dirname, '../../src/db/products.json'), 'utf8', (err:any, data:any) => {
    if (err) {
@@ -19,11 +18,11 @@ const getAllProducts = async (req: any, res: any, next: any) => {
       console.log("Hello")
       const categoryName = req.params.categoryName;
       const resultPerPage = 10;
-      let productsDB = [];
+      let productsDB: any = [];
       try{
          productsDB = database.filter((obj:any) => obj.category == categoryName)[0].products;
       }catch(err){
-         res.status(200).json({
+         return res.status(200).json({
             success: true,
             products: [],
             productsCount: 0,
@@ -33,7 +32,7 @@ const getAllProducts = async (req: any, res: any, next: any) => {
       }
       const productsCount = productsDB.length;
    
-      const apiFeature = new ApiFeatures(productsDB, req.query)
+      const apiFeature = new Operations(productsDB, req.query)
         .filter();
         
       let products = apiFeature.query;
@@ -48,7 +47,7 @@ const getAllProducts = async (req: any, res: any, next: any) => {
 
       let totalPages = Math.ceil(filteredProductsCount / 10);
      
-      res.status(200).json({
+      return res.status(200).json({
          success: true,
          products,
          productsCount,
@@ -58,7 +57,7 @@ const getAllProducts = async (req: any, res: any, next: any) => {
       });
    }catch(err){
       console.log(err);
-      res.status(500).json({success: false});
+      return res.status(500).json({success: false});
    }
    
 };
