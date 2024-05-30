@@ -19,22 +19,6 @@
           "availability": "yes"
         },
         {
-          "productId": "E001",
-          "productName": "Wireless Bluetooth Headphones",
-          "price": 79.99,
-          "rating": 4.5,
-          "discount": 10,
-          "availability": "yes"
-        },
-        {
-          "productId": "E002",
-          "productName": "4K Ultra HD Smart TV",
-          "price": 599.99,
-          "rating": 4.8,
-          "discount": 15,
-          "availability": "yes"
-        },
-        {
           "productId": "E003",
           "productName": "Smartphone with 128GB Storage",
           "price": 699.99,
