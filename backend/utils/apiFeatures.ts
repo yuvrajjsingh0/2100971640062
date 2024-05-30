@@ -1,5 +1,7 @@
 // import { DocumentQuery, Document } from 'mongoose';
 
+import { availableMemory } from "process";
+
 // interface QueryString {
 //     keyword?: string;
 //     page?: string;
@@ -87,18 +89,44 @@ class ApiFeatures {
         const removeFields = ["keyword", "page", "limit"];
         removeFields.forEach(key => delete queryCopy[key]);
 
-        if (queryCopy.price) {
-            const price = queryCopy.price;
-            if (price.gte) this.query = this.query.filter(product => product.price >= price.gte);
-            if (price.lte) this.query = this.query.filter(product => product.price <= price.lte);
+        console.log(queryCopy);
+
+        if (queryCopy.priceLower || queryCopy.priceUpper) {
+            console.log("Filter by price", queryCopy);
+            if (queryCopy.priceLower) this.query = this.query.filter(product => product.price >= queryCopy.priceLower);
+            if (queryCopy.priceUpper) this.query = this.query.filter(product => product.price <= queryCopy.priceUpper);
         }
 
-        if (queryCopy.rating) {
-            const rating = queryCopy.rating;
-            if (rating.gte) this.query = this.query.filter(product => product.rating >= rating.gte);
-            if (rating.lte) this.query = this.query.filter(product => product.rating <= rating.lte);
+        if (queryCopy.ratingLower || queryCopy.ratingUpper) {
+            if (queryCopy.ratingLower) this.query = this.query.filter(product => product.rating >= queryCopy.ratingLower);
+            if (queryCopy.ratingUpper) this.query = this.query.filter(product => product.rating <= queryCopy.ratingUpper);
         }
 
+        if(queryCopy.availability){
+            this.query = this.query.filter(product => product.availability == queryCopy.availability);
+        }
+
+        if (queryCopy.discountLower || queryCopy.discountUpper) {
+            if (queryCopy.discountLower) this.query = this.query.filter(product => product.discount >= queryCopy.discountLower);
+            if (queryCopy.discountUpper) this.query = this.query.filter(product => product.discount <= queryCopy.discountUpper);
+        }
+
+        return this;
+    }
+
+    sort(): this {
+        if (this.queryStr.sort) {
+            const sortFields = this.queryStr.sort.split(',').map((field: string) => field.trim());
+            this.query.sort((a, b) => {
+                for (let field of sortFields) {
+                    const [key, order] = field.split('[');
+                    const direction = order?.charAt(0) === 'h' ? -1 : 1;
+                    if (a[key] < b[key]) return -1 * direction;
+                    if (a[key] > b[key]) return 1 * direction;
+                }
+                return 0;
+            });
+        }
         return this;
     }
 

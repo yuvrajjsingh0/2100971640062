@@ -18,7 +18,7 @@ const getAllProducts = async (req: any, res: any, next: any) => {
    try{
       console.log("Hello")
       const categoryName = req.params.categoryName;
-      const resultPerPage = 8;
+      const resultPerPage = 10;
       let productsDB = [];
       try{
          productsDB = database.filter((obj:any) => obj.category == categoryName)[0].products;
@@ -34,21 +34,27 @@ const getAllProducts = async (req: any, res: any, next: any) => {
       const productsCount = productsDB.length;
    
       const apiFeature = new ApiFeatures(productsDB, req.query)
-        .search()
         .filter();
         
       let products = apiFeature.query;
+
+      apiFeature.sort();
    
       let filteredProductsCount = products.length;
    
       apiFeature.pagination(resultPerPage);
+
+      products = apiFeature.query;
+
+      let totalPages = Math.ceil(filteredProductsCount / 10);
      
       res.status(200).json({
          success: true,
          products,
          productsCount,
          resultPerPage,
-         filteredProductsCount
+         filteredProductsCount,
+         totalPages
       });
    }catch(err){
       console.log(err);
