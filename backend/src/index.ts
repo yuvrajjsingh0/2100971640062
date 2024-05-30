@@ -8,18 +8,7 @@ const path = require('path');
 dotenv.config();
 
 const app: Express = express();
-const port = process.env.PORT || 3000;
-
-let database: any = [];
-
-// fs.readFile(path.join(__dirname, '../src/db/products.json'), 'utf8', (err:any, data:any) => {
-//     if (err) {
-//         process.exit();
-//     } else {
-//         database = data;
-//     }
-// });
-
+const port = process.env.PORT || 4000;
 
 app.use('/api', products)
 
